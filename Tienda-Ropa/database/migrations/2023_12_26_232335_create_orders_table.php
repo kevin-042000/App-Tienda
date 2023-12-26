@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');  //Nombre del usuario
-            $table->string('email')->unique(); //Correo electrónico del usuario
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->foreignId('user_id')->constrained(); // Clave foránea que referencia al usuario que realizó el pedido
+            $table->string('status')->default('En proceso');  // Estado del pedido (por ejemplo, "En proceso", "Enviado", etc.)
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('orders');
     }
 };
