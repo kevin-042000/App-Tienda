@@ -19,6 +19,7 @@
         
             <button type="submit">Registrarse</button>
 
+            <p>¿Ya estás registrado? <a href="{{ route('login') }}">Inicia sesión</a></p>
         </form>
     </div>
 @endsection

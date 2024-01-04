@@ -13,38 +13,33 @@ use App\Http\Requests\RegistrationRequest;
 
 class RegisterController extends Controller
 {
-    public function showRegistrationForm()
-    {
-        return view('layouts.view_public.register');
-    }
-
-    public function store(Request $request)
-    {
-        // Validar los datos del formulario
-        $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:255',
-            'correo' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
-        // Manejar los errores de validación
-        if ($validator->fails()) {
-            return redirect('register')
-                ->withErrors($validator)
-                ->withInput();
+        public function showRegistrationForm()
+        {
+            return view('layouts.view_public.register');
         }
-
-        // Crear y guardar el usuario
-        $user = new User;
-        $user->nombre = $request->nombre;
-        $user->email = $request->correo;
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        // Autenticar al usuario después de registrarse
-        auth()->login($user);
-
-        // Redirigir después del registro
-        return redirect()->route('home');
-    }
+    
+        public function register(RegistrationRequest $request)
+        {
+            // Manejar los errores de validación
+            $validator = Validator::make($request->all(), $request->rules());
+    
+            if ($validator->fails()) {
+                return redirect('register')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+    
+            // Crear y guardar el usuario
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->save();
+    
+            // Autenticar al usuario después de registrarse
+            auth()->login($user);
+    
+            // Redirigir después del registro
+            return redirect()->route('home');
+        }
 }

@@ -5,60 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
-    // Redirección después del inicio de sesión exitoso
-    protected $redirectTo = 'home';
-
-    public function __construct()
-    {
-        // Middleware: redirigir a 'home' si el usuario ya está autenticado
-        $this->middleware('guest')->except('logout');
-    }
-
-    // Muestra el formulario de inicio de sesión
     public function showLoginForm()
     {
         return view('layouts.view_public.login');
     }
 
-    // Método para manejar el inicio de sesión
     public function login(LoginRequest $request)
     {
-        // El formulario ya está validado en este punto
+        $credentials = $request->only('email', 'password');
 
-        // Intentar autenticar al usuario
-        if ($this->attemptLogin($request)) {
-            // Autenticación exitosa
-
-            // Puedes personalizar la lógica aquí si es necesario
-
-            // Redirigir a la página deseada (en este caso, 'home')
-            return redirect()->intended($this->redirectPath());
+        if (Auth::attempt($credentials)) {
+            // El usuario ha sido autenticado
+            return redirect()->route('home');
         }
 
-        // Autenticación fallida
-
-        // Puedes personalizar la lógica aquí si es necesario
-
-        // Redirigir de vuelta al formulario de inicio de sesión con un mensaje de error
-        return redirect()->back()->withInput($request->only('email', 'remember'))->withErrors([
-            'email' => trans('auth.failed'),
-        ]);
+        // Si la autenticación falla, redirige de nuevo al formulario de inicio de sesión con un mensaje de error.
+        return redirect('login')->with('error', 'Credenciales incorrectas. Por favor, inténtalo de nuevo.');
     }
 
-    // Lógica para cerrar sesión
-    public function logout(Request $request)
+    public function logout()
     {
-        // Cierra la sesión del usuario
-        $this->guard()->logout();
-
-        // Invalida la sesión y regresa al inicio
-        $request->session()->invalidate();
-
+        Auth::logout();
         return redirect('home');
     }
+
 }
