@@ -11,9 +11,10 @@
     </title>
 </head>
 <body>
+
     @yield('content')
 
 
-    @vite(['resources/css/app.js '])
+    @vite('resources/js/app.js')
 </body>
 </html>
