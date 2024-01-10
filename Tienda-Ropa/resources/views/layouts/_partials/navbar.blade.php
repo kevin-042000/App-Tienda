@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Features</a>
@@ -39,7 +39,7 @@
                     {{-- Opcion para administradores solo cuando tienen el rol ADM --}}
                     @if(auth()->check())
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Administrador</a>
+                            <a class="nav-link" href="{{ route('admin.panel') }}">Panel Administrador</a>
                         </li>
                     @endif
                     {{-- fin de la opcion de ADM --}}

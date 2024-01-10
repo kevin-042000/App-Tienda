@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegistrationRequest;
+use App\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -35,6 +36,9 @@ class RegisterController extends Controller
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->save();
+    
+            // Asignar automáticamente el rol "usuario"
+            $user->roles()->attach(Role::where('name', 'usuario')->first());
     
             // Autenticar al usuario después de registrarse
             auth()->login($user);
